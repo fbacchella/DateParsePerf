@@ -1,6 +1,5 @@
 package fr.loghub;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -64,7 +63,7 @@ public class BetterIso8601Benchmarks {
                         .shouldDoGC(true)
                         .forks(forks);
         
-        if (tests.size() == 0) {
+        if (tests.isEmpty()) {
             String packageRegex;
             if ("fr.loghub.scanners".equals(packageName)) {
                 packageRegex = "fr\\.loghub\\.scanners\\.*";
@@ -109,19 +108,7 @@ public class BetterIso8601Benchmarks {
                 plots[bpRank++] = bp;
                 max = Math.max(max, (int) bp.high);
                 min = Math.min(min, (int)stats.getMin());
-                //            BenchmarkResult br = rr.getAggregatedResult();
-                //            System.out.println("Benchmark: " + br.getParams().getBenchmark());
-                //            System.out.println("generatedBenchmark: " + br.getParams().generatedBenchmark());
-                //            Statistics stats = br.getPrimaryResult().getStatistics();
-                //            System.out.println("min; " + stats.getMin());
-                //            System.out.println("%25; " + stats.getPercentile(25));
-                //            System.out.println("%50; " + stats.getPercentile(50));
-                //            System.out.println("%75; " + stats.getPercentile(75));
-                //            System.out.println("max; " + stats.getMax());
-                //
-                //            Statistics prStats = rr.getAggregatedResult().getPrimaryResult().getStatistics();
             }
-            System.out.format("%s min=%s max=%s %s %s%n", "DateParsers", 0, max, "ns", Arrays.toString(plots));
             BoxPlot.generate(svgName, 0, max, max / 5, 0.25, "ns ", "", plots);
         }
     }

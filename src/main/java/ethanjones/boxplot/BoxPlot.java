@@ -1,10 +1,11 @@
 package ethanjones.boxplot;
 
 import java.awt.*;
-import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 
+import org.apache.batik.constants.XMLConstants;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.DOMGroupManager;
 import org.apache.batik.util.SVGConstants;
@@ -14,64 +15,11 @@ import org.w3c.dom.Element;
 
 public class BoxPlot {
 
-    public static int overallScale = 10;
-    public static int bpHeight = overallScale * 5;
+    private static final int overallScale = 10;
+    private static final int bpHeight = overallScale * 5;
 
-    public static void main(String[] args) {
-        BoxPlot fictionPrice = new BoxPlot("Fiction");
-        fictionPrice.q1 = 5.24;
-        fictionPrice.q2 = 5.59;
-        fictionPrice.q3 = 6.29;
-        fictionPrice.low = 3.99;
-        fictionPrice.high = 7.00;
-        fictionPrice.outliers = new double[]{13.60, 9.09, 12.91, 8.39, 10.49, 8.55, 1.00};
-
-        BoxPlot nonfictionPrice = new BoxPlot("Non fiction");
-        nonfictionPrice.q1 = 5.565;
-        nonfictionPrice.q2 = 6.99;
-        nonfictionPrice.q3 = 10.49;
-        nonfictionPrice.low = 1.00;
-        nonfictionPrice.high = 17.68;
-        nonfictionPrice.outliers = new double[]{26.00};
-
-        BoxPlot childrensPrice = new BoxPlot("Children's ");
-        childrensPrice.q1 = 4.89;
-        childrensPrice.q2 = 5.24;
-        childrensPrice.q3 = 5.24;
-        childrensPrice.low = 4.49;
-        childrensPrice.high = 5.59;
-        childrensPrice.outliers = new double[]{6.49, 5.84, 8.24, 7.69, 3.99, 20.40, 3.38, 7.17, 7.00};
-
-        generate("price", 0, 30, 5, 10, "£", "", fictionPrice, nonfictionPrice, childrensPrice);
-
-        BoxPlot fictionPages = new BoxPlot("Fiction");
-        fictionPages.q1 = 352;
-        fictionPages.q2 = 400;
-        fictionPages.q3 = 468;
-        fictionPages.low = 192;
-        fictionPages.high = 624;
-        fictionPages.outliers = new double[]{/*112, 136, 768, 1008*/};
-
-        BoxPlot nonfictionPages = new BoxPlot("Non fiction");
-        nonfictionPages.q1 = 112;
-        nonfictionPages.q2 = 264;
-        nonfictionPages.q3 = 320;
-        nonfictionPages.low = 32;
-        nonfictionPages.high = 576;
-        nonfictionPages.outliers = new double[]{/*784*/};
-
-        BoxPlot childrensPages = new BoxPlot("Children's ");
-        childrensPages.q1 = 32;
-        childrensPages.q2 = 224;
-        childrensPages.q3 = 336;
-        childrensPages.low = 32;
-        childrensPages.high = 640;
-        childrensPages.outliers = new double[]{/*816*/};
-
-        generate("pages", 0, 1100, 100, 0.5, "", "", fictionPages, nonfictionPages, childrensPages);
-    }
-
-    public static void generate(String filename, int chartMin, int chartMax, int interval, double scale, String unitBefore, String unitAfter, BoxPlot... boxPlots) {
+    public static void generate(String filename, int chartMin, int chartMax, int interval, double scale, String unitBefore, String unitAfter, BoxPlot... boxPlots)
+            throws IOException {
         DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
 
         String svgNS = "http://www.w3.org/2000/svg";
@@ -108,10 +56,8 @@ public class BoxPlot {
         }
         svgGenerator.setSVGCanvasSize(new Dimension((int)(width * 1.1), height + 20));
 
-        try (Writer svgOut = new FileWriter(new File(filename))) {
+        try (Writer svgOut = new FileWriter(filename)) {
             svgGenerator.stream(svgOut, true);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -122,9 +68,7 @@ public class BoxPlot {
         //center text
         text.setAttributeNS(null, "text-anchor", textAnchor);
 
-        text.setAttributeNS(SVGConstants.XML_NAMESPACE_URI,
-                            SVGConstants.XML_SPACE_QNAME,
-                            SVGConstants.XML_PRESERVE_VALUE);
+        text.setAttributeNS(XMLConstants.XML_NAMESPACE_URI, XMLConstants.XML_SPACE_QNAME, XMLConstants.XML_PRESERVE_VALUE);
         text.appendChild(svgGenerator.getDOMFactory().createTextNode(string));
         svgGenerator.domGroupManager().addElement(text, DOMGroupManager.FILL);
     }
