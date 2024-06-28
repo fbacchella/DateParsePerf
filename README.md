@@ -5,8 +5,8 @@ It can generate svg files.
 
 A quick test run can be launched with
 
-  mvn package
-  java -jar target/dateparseperf.jar -f  -s /tmp/dateparseperf.svg
+    mvn package
+    java -jar target/dateparseperf.jar -f  -s /tmp/dateparseperf.svg
 
 The `-f` argument tells to run a quick run, to test the benchs. With the `-s` argument, it generates an SVG.
 The `-t` argument can be used to run only some tests. The `-p` argument specify the package name to search tests.
